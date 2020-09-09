@@ -40,6 +40,7 @@ def berserk_tome():
 
         for i in picDiv:
             pic_url = picDiv[count].get('src')
+            # Flex on the automation detectors
             if "google" in pic_url:
                 continue
             print(f'Downloading {pic_url}')
