@@ -1,15 +1,16 @@
 import requests, os, bs4, shutil, subprocess
 
 def berserk_tome():
+    
+    # Command line instructions 
     print('This is the tome generator for Berserk')
     print('Chapters within a given range will be downloaded and converted into a single ebook, '
-          'with a table of contents that links to each chapter')
-    print()
+          'with a table of contents that links to each chapter \n')
 
     start = int(input('From which chapter of Berserk do you want to start? '))
     finish = int(input(' At which chapter do you want to end? '))
 
-
+    # File system setup
     folderName = 'Berserk Tome'
     bookName = f'Berserk {start}-{finish}'
     os.makedirs(folderName, exist_ok= True)
@@ -40,9 +41,11 @@ def berserk_tome():
 
         for i in picDiv:
             pic_url = picDiv[count].get('src')
-            # Flex on the automation detectors
+           
+            # Circumvent automation detectors
             if "google" in pic_url:
                 continue
+            
             print(f'Downloading {pic_url}')
             res2 = requests.get(pic_url)
             res2.raise_for_status()
@@ -69,17 +72,18 @@ def berserk_tome():
     os.rename(zippy_t, cbc)
 
     # Run calibre e-book converter as subprocess on cbz file
-    # Subprocess will depending on location of your command tools for calibre
+    # Subprocess will depend on location of command tools for calibre
     subprocess.run(['/Applications/calibre.app/Contents/MacOS/ebook-convert',
                     f'{startDir}{bookName}.cbc', f'{bookName}.azw3', '--landscape', '--dont-add-comic-pages-to-toc'])
 
-    #shutil.move(f'{chapterName}.azw3', f'{startDir}{folderName}/{chapterName}.azw3')
 
-    ## Delete the unneeded pics, folder, and cbz
+    # Delete unneeded pics, folder, and cbz
     os.remove(f'{startDir}{bookName}.cbc')
     for file in os.listdir(folderName):
         os.remove(f'{startDir}{folderName}/{file}')
     os.rmdir(f'{startDir}{folderName}')
+    
+    print('Conversion complete, enjoy your book!')
 
 if __name__ == "__main__":
     berserk_tome()
