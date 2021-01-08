@@ -10,10 +10,9 @@ In chapter mode, the images as compiled and converted into a single ebook, but m
  into a single file, and separates the individual chapters in a table of contents. In both modes, BAKA cleans up after itself, removing
  the individual pictures as well as the chapters used in Tome mode, leaving behind only a single, instantly accesible ebook.
  
- Baka is a passion project, so I plan to continuously update it as I grow as a software developer, and eventually i want to replace the Calibre 
- ebook convertyer with my own code. Other potential upgrades include:
+Developing Baka is my first utilitarian passion project, so I plan to update it as I grow as a software developer. Eventually I want to replace the Calibre ebook converter with my own code. Other potential upgrades include:
  - a larger manga library
- -  autonomous web search
+ - autonomous web search
  - concurrent file/chapter downloading
  - a TKinter based GUI
  - a user mode where users can locate good manga sources and save their own profiles for manga not initially built in
