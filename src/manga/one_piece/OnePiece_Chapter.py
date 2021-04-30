@@ -1,17 +1,25 @@
 import requests, os, bs4, shutil, subprocess
 
-def berserk_chapter():
-    num = int(input('Which chapter of Berserk do you want to download? '))
-    chapterName = f'Berserk Chapter {num}'
-    folderName = 'Berserk'
+
+def op_chapter():
+    num = int(input('Which chapter of One Piece do you want to download? '))
+    chapterName = f'One Piece Chapter {num}'
+    folderName = 'One Piece'
     startDir = '/Users/jenghis/OneDrive/Code/Scraper/tests/'
 
-    # Search site for selected chapter, if found parse chapter for frames
-    url = f'https://readberserk.com/chapter/berserk-chapter-{num:0>3}/'
+    # Search two sites for selected chapter, if found parse chapter for frames
+    url = f'https://onepiece-manga-online.net/manga/one-piece-chapter-{num}/'
     res = requests.get(url)
     res.raise_for_status()
     oneSoup = bs4.BeautifulSoup(res.text, 'html.parser')
-    picDiv = oneSoup.select('div.img_container > img')
+    picDiv = oneSoup.select('div.separator > a > img')
+    if len(picDiv) == 0:
+        url = f'https://online-one-piece.com/manga/one-piece-chapter-{num}/'
+        res = requests.get(url)
+        res.raise_for_status()
+        oneSoup = bs4.BeautifulSoup(res.text, 'html.parser')
+        picDiv = oneSoup.select('div.relative > picture > img')
+
 
     # If chapter isn't found, exit
     if len(picDiv) == 0:
@@ -19,20 +27,18 @@ def berserk_chapter():
         exit(0)
 
     # Make folders to store files and convert to cbz
-    os.makedirs(folderName, exist_ok= True)
-    os.makedirs(chapterName, exist_ok= True)
-
+    os.makedirs(folderName, exist_ok=True)
+    os.makedirs(chapterName, exist_ok=True)
 
     # Counter to iterate list of tags
     count = 0
+
     for i in picDiv:
         pic_url = picDiv[count].get('src')
-        if "google" in pic_url:
-            continue
         print(f'Downloading {pic_url}')
         res2 = requests.get(pic_url)
         res2.raise_for_status()
-        pic = open(os.path.join(chapterName, f'{count:0>2}.png'), 'wb')
+        pic = open(os.path.join(chapterName, os.path.basename(pic_url)), 'wb')
         for j in res2.iter_content(100000):
             pic.write(j)
         pic.close()
@@ -56,7 +62,6 @@ def berserk_chapter():
         os.remove(f'{startDir}{chapterName}/{file}')
     os.rmdir(f'{startDir}{chapterName}')
 
+
 if __name__ == "__main__":
-    berserk_chapter()
-
-
+    onepiece_chapter()

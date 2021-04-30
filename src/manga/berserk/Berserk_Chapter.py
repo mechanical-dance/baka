@@ -1,16 +1,14 @@
 import requests, os, bs4, shutil, subprocess
 
 
-def manga_chapter(name, in_url, zeros, filepath):
-    # zeros should look something like 0>3
-    num = int(input(f'Which chapter of {name} do you want to download? '))
-    chapterName = f'{name} Chapter {num}'
-    folderName = f'{name}'
-    # Later to be replaced by filepath
+def berserk_chapter():
+    num = int(input('Which chapter of Berserk do you want to download? '))
+    chapterName = f'Berserk Chapter {num}'
+    mangaName = 'Berserk'
     startDir = '/Users/jenghis/OneDrive/Code/Scraper/tests/'
 
     # Search site for selected chapter, if found parse chapter for frames
-    url = f'{in_url}{num:{zeros}}/'
+    url = f'https://readberserk.com/chapter/berserk-chapter-{num:0>3}/'
     res = requests.get(url)
     res.raise_for_status()
     oneSoup = bs4.BeautifulSoup(res.text, 'html.parser')
@@ -22,14 +20,15 @@ def manga_chapter(name, in_url, zeros, filepath):
         exit(0)
 
     # Make folders to store files and convert to cbz
-    os.makedirs(folderName, exist_ok= True)
-    os.makedirs(chapterName, exist_ok= True)
-
+    os.makedirs(mangaName, exist_ok=True)
+    os.makedirs(chapterName, exist_ok=True)
 
     # Counter to iterate list of tags
     count = 0
     for i in picDiv:
         pic_url = picDiv[count].get('src')
+        if "google" in pic_url:
+            continue
         print(f'Downloading {pic_url}')
         res2 = requests.get(pic_url)
         res2.raise_for_status()
@@ -49,7 +48,7 @@ def manga_chapter(name, in_url, zeros, filepath):
     subprocess.run(['/Applications/calibre.app/Contents/MacOS/ebook-convert',
                     f'{startDir}{chapterName}.cbz', f'{chapterName}.azw3', '--landscape'])
 
-    shutil.move(f'{chapterName}.azw3', f'{startDir}{folderName}/{chapterName}.azw3')
+    shutil.move(f'{chapterName}.azw3', f'{startDir}{mangaName}/{chapterName}.azw3')
 
     # Delete the unneeded pics, folder, and cbz
     os.remove(f'{startDir}{chapterName}.cbz')
@@ -58,3 +57,5 @@ def manga_chapter(name, in_url, zeros, filepath):
     os.rmdir(f'{startDir}{chapterName}')
 
 
+if __name__ == "__main__":
+    berserk_chapter()
