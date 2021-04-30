@@ -1,20 +1,24 @@
+import typing
 from src.manga.berserk.Berserk_Chapter import berserk_chapter
 from src.manga.one_piece.OnePiece_Chapter import op_chapter
 from src.manga.berserk.Tome_Raider_Berserk import berserk_tome
 from src.manga.one_piece.Tome_Raider_OnePiece import onepiece_tome
 from src.manga.yakusoku_no_neverland.Yakusoku_Chapter import ynn_chapter
 
+from manga.manga_class import Manga
+from manga.manga_list import *
+
 
 def mangaSelection():
-    manga = input('What manga are you looking to download today?'
-                  '\n\t a. One Piece'
-                  '\n\t b. Berserk'
-                  '\n\t c. Yakusoku No Neverland \n')
-
+    print('What manga are you looking to download today?')
+    for i in Manga.mangaList:
+        print(f'\t{i.code}. {i.title}')
+    manga = input()
     if manga == 'a':
-        title = 'One Piece'
+        title = one_piece.title
     elif manga == 'b':
-        title = 'Berserk'
+        title = berserk.title
+        print(berserk.get_url(6))
     elif manga == 'c':
         title = 'Yakusoku No Neverland'
     else:
@@ -23,7 +27,7 @@ def mangaSelection():
     return bookType(manga, title)
 
 
-def bookType(manga, title):
+def bookType(manga: str, title: str):
     print(f'{title}, a solid choice.')
     sel = input('Are you looking to download a single chapter (a) or make a collection (b)? \n\t')
     if sel == 'a':

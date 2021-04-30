@@ -1,13 +1,15 @@
 import requests, os, bs4, shutil, subprocess
+from pathlib import Path
 
 
 def ynn_chapter():
-    num = int(input('Which chapter of Yakusoku no Neverland do you want to download? '))
-    chapterName = f'Yakusoku no Neverland Chapter {num}'
-    folderName = 'Yakusoku no Neverland'
-    startDir = '/Users/jenghis/OneDrive/Code/Scraper/tests/'
+    title = 'Yakusoku No Neverland'
+    num = int(input(f'Which chapter of {title} do you want to download? '))
+    chapterName = f'{title} Chapter {num}'
+    folderName = f'{title}'
+    startDir = f'{Path.home()}/Downloads'
 
-    # Search two sites for selected chapter, if found parse chapter for frames
+    # Search site(s) for selected chapter, if found parse chapter for image frames
     url = f'https://w16.promised-neverland.com/manga/the-promised-neverland-chapter-{num}/'
     res = requests.get(url)
     res.raise_for_status()
