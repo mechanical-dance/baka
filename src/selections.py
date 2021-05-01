@@ -5,7 +5,6 @@ from src.manga.berserk.Tome_Raider_Berserk import berserk_tome
 from src.manga.one_piece.Tome_Raider_OnePiece import onepiece_tome
 from src.manga.yakusoku_no_neverland.Yakusoku_Chapter import ynn_chapter
 
-from manga.manga_class import Manga
 from manga.manga_list import *
 
 
