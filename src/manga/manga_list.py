@@ -1,4 +1,4 @@
-from src.manga.manga_class import Manga
+from src.classes.manga_class import Manga
 
 
 # One Piece

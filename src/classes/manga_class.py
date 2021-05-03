@@ -1,9 +1,6 @@
 import weakref
-from dataclasses import dataclass
-from typing import Optional
 
 
-@dataclass
 class Manga:
     """Manga to be downloaded w/ it's attributes"""
     mangaCount = 1
@@ -15,12 +12,11 @@ class Manga:
         self.__class__.mangaList.append(weakref.proxy(self))
         Manga.mangaCount += 1
 
-    code: int
     url: str
     div_structure: str
-    url2: Optional[str]
-    div_structure2: Optional[str]
-    format: Optional[str] = '0'
+    url2: str = None
+    div_structure2: str = None
+    format: str = '0'
 
     def get_url(self, chapter: int) -> str:
         return f'{self.url}{chapter:{self.format}}'
