@@ -1,18 +1,18 @@
 import requests, os, bs4, shutil, subprocess
 
 
-def ynn_chapter():
-    num = int(input('Which chapter of Yakusoku no Neverland do you want to download? '))
-    chapterName = f'Yakusoku no Neverland Chapter {num}'
-    folderName = 'Yakusoku no Neverland'
+def berserk_chapter():
+    num = int(input('Which chapter of Berserk do you want to download? '))
+    chapterName = f'Berserk Chapter {num}'
+    mangaName = 'Berserk'
     startDir = '/Users/jenghis/OneDrive/Code/Scraper/tests/'
 
-    # Search two sites for selected chapter, if found parse chapter for frames
-    url = f'https://w16.promised-neverland.com/manga/the-promised-neverland-chapter-{num}/'
+    # Search site for selected chapter, if found parse chapter for frames
+    url = f'https://readberserk.com/chapter/berserk-chapter-{num:0>3}/'
     res = requests.get(url)
     res.raise_for_status()
     oneSoup = bs4.BeautifulSoup(res.text, 'html.parser')
-    picDiv = oneSoup.select('div.separator > a > img')
+    picDiv = oneSoup.select('div.img_container > img')
 
     # If chapter isn't found, exit
     if len(picDiv) == 0:
@@ -20,18 +20,19 @@ def ynn_chapter():
         exit(0)
 
     # Make folders to store files and convert to cbz
-    os.makedirs(folderName, exist_ok=True)
+    os.makedirs(mangaName, exist_ok=True)
     os.makedirs(chapterName, exist_ok=True)
 
     # Counter to iterate list of tags
     count = 0
-
     for i in picDiv:
-        pic_url = picDiv[count].get('data-src')
+        pic_url = picDiv[count].get('src')
+        if "google" in pic_url:
+            continue
         print(f'Downloading {pic_url}')
         res2 = requests.get(pic_url)
         res2.raise_for_status()
-        pic = open(os.path.join(chapterName, os.path.basename(pic_url)), 'wb')
+        pic = open(os.path.join(chapterName, f'{count:0>2}.png'), 'wb')
         for j in res2.iter_content(100000):
             pic.write(j)
         pic.close()
@@ -47,7 +48,7 @@ def ynn_chapter():
     subprocess.run(['/Applications/calibre.app/Contents/MacOS/ebook-convert',
                     f'{startDir}{chapterName}.cbz', f'{chapterName}.azw3', '--landscape'])
 
-    shutil.move(f'{chapterName}.azw3', f'{startDir}{folderName}/{chapterName}.azw3')
+    shutil.move(f'{chapterName}.azw3', f'{startDir}{mangaName}/{chapterName}.azw3')
 
     # Delete the unneeded pics, folder, and cbz
     os.remove(f'{startDir}{chapterName}.cbz')
@@ -57,4 +58,4 @@ def ynn_chapter():
 
 
 if __name__ == "__main__":
-    ynn_chapter()
+    berserk_chapter()
