@@ -1,7 +1,7 @@
 # BAKA
 ### booking and kindle archiver
 
-#### ❗ This repo is currently being refactored to be a modular program and have a file structure that makes sense. As proud as I was to have something that I worked a few months ago, it's pretty painful to look at now. Check out the branches to see the latest progress and feel free to fork/contribute site recipes to the manga_list.py file. The old individual download files are (unsurprisingly) in the old files folder
+#### ❗ This repo is currently being refactored to be a modular program and have a file structure that makes sense. As proud as I was to have something that even worked a few months ago, it's pretty painful to look at now. Check out the branches to see the latest progress and feel free to fork/contribute/add site recipes to the manga_list.py file. The old individual download files are (unsurprisingly) in the old files folder.
 
 
 BAKA is a simple command line tool that allows users to download manga from the internet and
