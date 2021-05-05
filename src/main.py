@@ -1,4 +1,3 @@
-from src.directory_functions import create_dirs
 from src.selections import mangaSelection, bookType
 from src.scraper_functions import *
 
@@ -13,9 +12,9 @@ def main():
     book = bookType(manga)
     # Create dirs for storage
     book.create_dirs()
-    exit(0)
     # Download image files
-    download(book)
+    download_chapter(book)
+    exit(0)
     # Convert to ebook
     # convert()
     # Clean up
