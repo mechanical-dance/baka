@@ -47,15 +47,15 @@ def ynn_chapter():
     # Run calibre e-book converter as subprocess on cbz file
     # Subprocess will depending on location of your command tools for calibre
     subprocess.run(['/Applications/calibre.app/Contents/MacOS/ebook-convert',
-                    f'{startDir}{chapterName}.cbz', f'{chapterName}.azw3', '--landscape'])
+                    f'{startDir}/{chapterName}.cbz', f'{chapterName}.azw3', '--landscape'])
 
-    shutil.move(f'{chapterName}.azw3', f'{startDir}{folderName}/{chapterName}.azw3')
+    shutil.move(f'{chapterName}.azw3', f'{startDir}/{folderName}/{chapterName}.azw3')
 
     # Delete the unneeded pics, folder, and cbz
-    os.remove(f'{startDir}{chapterName}.cbz')
-    for file in os.listdir(chapterName):
-        os.remove(f'{startDir}{chapterName}/{file}')
-    os.rmdir(f'{startDir}{chapterName}')
+    os.remove(f'{startDir}/{chapterName}.cbz')
+    for file in os.listdir(f'{startDir}/{chapterName}'):
+        os.remove(f'{startDir}/{chapterName}/{file}')
+    os.rmdir(f'{startDir}/{chapterName}')
 
 
 if __name__ == "__main__":
