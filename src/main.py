@@ -10,16 +10,19 @@ def main():
     manga = mangaSelection()
     # Choose chapter or collection
     book = bookType(manga)
-    # Create dirs for storage
-    book.create_dirs()
-    # Download image files
+    # Create get chapter info and create series dir
+    book.chapter_info()
+    # Download image files and prepare cbz
     download_chapter(book)
-    exit(0)
+    # Clean up chapter files
+    book.cleanup()
+
     # Convert to ebook
+    exit(0)
     # convert()
     # Clean up
 
-    #Thanks!
+    # Thanks!
 
 
 if __name__ == "__main__":
