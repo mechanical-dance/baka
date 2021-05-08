@@ -3,6 +3,7 @@ import shutil
 
 import bs4
 import requests
+from requests import Response
 
 from src.classes.book_class import Book
 
@@ -15,11 +16,13 @@ def download_chapter(book: Book, chapter: int = None):
 
     os.makedirs(f'{book.series}/{chapter}', exist_ok=True)
 
+    res: Response = Response()
+
     try:
-        res = requests.get(f'{book.manga.url}{chapter}')
+        res: Response = requests.get(f'{book.manga.url}{chapter}')
     except ConnectionError:
         print('It seems the info for that manga is outdated. Please open an issue')  # Todo: Link to github
-        # Todo Cleanup Directories
+        # TODO Cleanup Directories
         exit(0)
     res.raise_for_status()
     parser = bs4.BeautifulSoup(res.text, 'html.parser')
@@ -34,12 +37,12 @@ def download_chapter(book: Book, chapter: int = None):
     data = data_check(imageArray[0])
 
     if data:
-        for image in imageArray:
+        for _ in imageArray:
             url = imageArray[count].get('data-src')
             download_img(book, chapter, url, count)
             count += 1
     else:
-        for image in imageArray:
+        for _ in imageArray:
             url = imageArray[count].get('src')
             download_img(book, chapter, url, count)
             count += 1
