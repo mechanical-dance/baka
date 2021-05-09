@@ -16,7 +16,7 @@ To use BAKA just clone this repo, navigate to the baka folder, use pip to instal
 1. run main.py from your ide
 2. add the baka folder to your PYTHONPATH and run it from a terminal 
 
-❗Note that at the moment, BAKA relies on Calibre being installed in its default location and works on Mac OSX
+❗Note that at the moment, BAKA relies on Calibre being installed in its default location and works on Mac OSX and Windows 10
 <hr>
 
 ### Dev roadmap:
