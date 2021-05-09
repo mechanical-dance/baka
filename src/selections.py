@@ -21,11 +21,7 @@ def bookType(manga: Manga) -> Book:
     if sel == 'a':
         return Book(manga, 'chapter')
     elif sel == 'b':
-        if manga != yakusoku:
-            return Book(manga, 'collection')
-        else:
-            res = input('Only One Piece and Berserk are available as collections at the moment. Start Over?\n\t')
-            return mangaSelection() if res == 'y' else quit(0)
+        return Book(manga, 'collection')
     else:
         print('Please enter "a" for a chapter or "b" for a collection\n')
         return bookType(manga)
