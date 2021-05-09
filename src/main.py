@@ -33,7 +33,7 @@ def main():
             print('Downloading Chapter', count)
 
             cFile.write(f'{count}.cbz: Chapter {count} \n')  # Add chapter to index
-            cbz = download_chapter(book, count)  # Download image files and prepare cbz
+            download_chapter(book, count)  # Download image files and prepare cbz
             book.cleanup(count)  # Clean up chapter files
             count += 1
 

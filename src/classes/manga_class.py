@@ -13,9 +13,9 @@ class Manga:
         Manga.mangaCount += 1
 
     url: str
-    div_structure: str
+    div: str
     url2: str = None
-    div_structure2: str = None
+    div2: str = None
     format: str = '0'
 
     def get_url(self, chapter: int) -> str:
