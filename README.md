@@ -12,7 +12,9 @@ In both modes, BAKA cleans up after itself, leaving behind only a ready to read 
 Baka is my first personal project, so I plan to update it as I grow as a developer. As of now, it's usable if you know how to run python scripts but eventually there will just be a binary.
 
 ## Usage:
-To use BAKA just clone this repo, navigate to the baka folder, use pip to install the requirements.txt file, and in the src folder run main.py 
+To use BAKA just clone this repo, navigate to the baka folder, use pip to install the requirements.txt file, and in the src folder either 
+1. run main.py from your ide
+2. add the baka folder to your PYTHONPATH and run it from a terminal 
 
 ❗Note that at the moment, BAKA relies on Calibre being installed in its default location and works on Mac OSX
 <hr>
