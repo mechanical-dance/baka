@@ -15,6 +15,7 @@ class Book:
 
     start: int = None
     finish: int = None
+    range: int = None
     series: str
     chapDir: str = None
     bookDir: str = None
@@ -29,17 +30,30 @@ class Book:
             return
 
         elif self.type == 'collection':
-            self.start = int(input('From which chapter of One Piece do you want to start? '))
+            self.start = int(input(f'From which chapter of {manga.title} do you want to start? '))
             self.finish = int(input(' At which chapter do you want to end? '))
-            self.bookDir = f'{manga.title} {self.start}-{self.finish}'
+            self.range = self.finish - (self.start - 1)
+            self.bookDir = f'{self.series}/{manga.title} {self.start}-{self.finish}'
             os.makedirs(f'{self.series}', exist_ok=True)  # Series folder
+            os.makedirs(f'{self.bookDir}', exist_ok=True)  # Book Folder
             return
 
-    def cleanup(self, collection: bool = False) -> None:
+    def cleanup(self, count: int = None, book=False) -> None:
         """Cleans up files and folders upon success or failure.
             Accepts a collection boolean to know what files to remove"""
-        if not collection:
-            # os.remove(f'{self.chapDir}.cbz')
-            for file in os.listdir(f'{self.series}/{self.start}'):
-                os.remove(f'{self.series}/{self.start}/{file}')
-            os.rmdir(f'{self.series}/{self.start}')
+        if not count:
+            if book:
+                os.remove(f'{self.bookDir}.cbc')
+                for file in os.listdir(f'{self.bookDir}'):
+                    os.remove(f'{self.bookDir}/{file}')
+                os.rmdir(f'{self.bookDir}')
+            else:
+                os.remove(f'{self.chapDir}.cbz')
+                for file in os.listdir(f'{self.series}/{self.start}'):
+                    os.remove(f'{self.series}/{self.start}/{file}')
+                os.rmdir(f'{self.series}/{self.start}')
+
+        else:
+            for file in os.listdir(f'{self.bookDir}/{count}'):
+                os.remove(f'{self.bookDir}/{count}/{file}')
+            os.rmdir(f'{self.bookDir}/{count}')
