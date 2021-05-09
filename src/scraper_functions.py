@@ -8,13 +8,14 @@ from requests import Response
 from src.classes.book_class import Book
 
 
-def download_chapter(book: Book, chapter: int = None):
+def download_chapter(book: Book, chapter: int = None) -> str:
     """Finds a manga chapter, loops through and downloads its images.
     Accepts an optional 'chapter' value for looping through chapters in collection mode."""
 
-    chapter = chapter if chapter else book.start
+    location: str = f'{book.bookDir}/{chapter}' if chapter else f'{book.series}/{book.start}'
+    chapter: int = chapter if chapter else book.start
 
-    os.makedirs(f'{book.series}/{chapter}', exist_ok=True)
+    os.makedirs(location, exist_ok=True)
 
     res: Response = Response()
 
@@ -26,10 +27,10 @@ def download_chapter(book: Book, chapter: int = None):
         exit(0)
     res.raise_for_status()
     parser = bs4.BeautifulSoup(res.text, 'html.parser')
-    imageArray: [str] = parser.select(book.manga.div_structure)
+    imageArray: [str] = parser.select(book.manga.div)
 
     if len(imageArray) == 0:
-        print(f"Couldn't find chapter {chapter}. Exiting...")
+        print(f"\tCouldn't find chapter {chapter}. Exiting...")
         exit(0)
 
     count: int = 0
@@ -39,21 +40,27 @@ def download_chapter(book: Book, chapter: int = None):
     if data:
         for _ in imageArray:
             url = imageArray[count].get('data-src')
-            download_img(book, chapter, url, count)
+            download_img(url, location)
             count += 1
     else:
         for _ in imageArray:
             url = imageArray[count].get('src')
-            download_img(book, chapter, url, count)
+            download_img(url, location)
             count += 1
 
-    prepare_cbz(book, chapter)
+    return prepare_cbz(book, location)
 
 
-def prepare_cbz(book: Book, chapter: int) -> None:
-    arch = shutil.make_archive(f'{book.series}/{chapter}', 'zip', f'{book.series}/{chapter}')  # Archive chapter folder
-    cbz = f'{book.chapDir}.cbz' if book.chapDir else f'{book.series}/{chapter}.cbz'
-    os.rename(arch, cbz)
+def prepare_cbz(book: Book, location: str) -> str:
+    arch = shutil.make_archive(location, 'zip', location)  # Archive chapter folder
+    cbzPath = book.chapDir if book.chapDir else location
+    os.rename(arch, f'{cbzPath}.cbz')
+    return cbzPath
+
+
+def prepare_cbc(book: Book):
+    arch = shutil.make_archive(book.bookDir, 'zip', book.bookDir)
+    os.rename(arch, f'{book.bookDir}.cbc')
 
 
 def data_check(img) -> bool:
@@ -62,12 +69,11 @@ def data_check(img) -> bool:
     return True if 'data' in url else False
 
 
-def download_img(book: Book, chapter, url: str, count: int):
-    print(f'Downloading {url}')
+def download_img(url: str, location: str):
+    print(f'\tDownloading {url}')
     res2 = requests.get(url)
     res2.raise_for_status()
-    pic = open(os.path.join(f'{book.series}/{chapter}', os.path.basename(url)), 'wb')
+    pic = open(os.path.join(location, os.path.basename(url)), 'wb')
     for i in res2.iter_content(100000):
         pic.write(i)
     pic.close()
-    count += 1
