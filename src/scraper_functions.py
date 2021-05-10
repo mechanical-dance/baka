@@ -15,7 +15,7 @@ def download_chapter(book: Book, chapter: int = None, retry: bool = False) -> st
 
     location: str = f'{book.bookDir}/{chapter}' if chapter else f'{book.series}/{book.start}'
     chapter: int = chapter if chapter else book.start
-    # If attempt is retry, use backup variables
+    # If attempt is a retry, use backup variables
     url, div = (book.manga.url, book.manga.div) if not retry else (book.manga.url2, book.manga.div2)
 
     os.makedirs(location, exist_ok=True)
@@ -47,11 +47,17 @@ def download_chapter(book: Book, chapter: int = None, retry: bool = False) -> st
     if data:
         for _ in imageArray:
             url = imageArray[count].get('data-src')
+            # Circumvent google automation detectors
+            if "google" in url:
+                continue
             download_img(url, location)
             count += 1
     else:
         for _ in imageArray:
             url = imageArray[count].get('src')
+            # Circumvent google automation detectors
+            if "google" in url:
+                continue
             download_img(url, location)
             count += 1
 
