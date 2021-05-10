@@ -3,10 +3,10 @@ from src.classes.manga_class import Manga
 
 # One Piece
 one_piece = Manga('One Piece')
-one_piece.url= 'https://1piecemanga.com/manga/one-piece-chapter-'
-one_piece.div = 'div > div.code-block > img'
-one_piece.url2 = 'https://online-one-piece.com/manga/one-piece-chapter-'
+one_piece.url = 'https://onepiece-manga-online.net/manga/one-piece-chapter-'
 one_piece.div = 'div.relative > picture > img'
+one_piece.url2 = 'https://online-one-piece.com/manga/one-piece-chapter-'
+one_piece.div2 = 'div.relative > picture > img'
 
 # Berserk
 berserk = Manga('Berserk')
