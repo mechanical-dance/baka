@@ -8,30 +8,37 @@ from requests import Response
 from src.classes.book_class import Book
 
 
-def download_chapter(book: Book, chapter: int = None) -> str:
+def download_chapter(book: Book, chapter: int = None, retry: bool = False) -> str:
     """Finds a manga chapter, loops through and downloads its images.
-    Accepts an optional 'chapter' value for looping through chapters in collection mode."""
+    Accepts an optional 'chapter' value for looping through chapters in collection mode
+    and 'retry' boolean for checking backup sites."""
 
     location: str = f'{book.bookDir}/{chapter}' if chapter else f'{book.series}/{book.start}'
     chapter: int = chapter if chapter else book.start
+    # If attempt is a retry, use backup variables
+    url, div = (book.manga.url, book.manga.div) if not retry else (book.manga.url2, book.manga.div2)
 
     os.makedirs(location, exist_ok=True)
 
     res: Response = Response()
 
     try:
-        res: Response = requests.get(f'{book.manga.url}{chapter}')
+        res = requests.get(f'{url}{chapter}')
     except ConnectionError:
         print('It seems the info for that manga is outdated. Please open an issue')  # Todo: Link to github
         # TODO Cleanup Directories
         exit(0)
     res.raise_for_status()
     parser = bs4.BeautifulSoup(res.text, 'html.parser')
-    imageArray: [str] = parser.select(book.manga.div)
+    imageArray: [str] = parser.select(div)
+    print('This is the image array object: ', imageArray)
 
     if len(imageArray) == 0:
-        print(f"\tCouldn't find chapter {chapter}. Exiting...")
-        exit(0)
+        if retry:
+            print(f"\tCouldn't find chapter {chapter}. Exiting...")
+            exit(0)
+        else:
+            return download_chapter(book, chapter, retry=True)
 
     count: int = 0
 
@@ -40,11 +47,17 @@ def download_chapter(book: Book, chapter: int = None) -> str:
     if data:
         for _ in imageArray:
             url = imageArray[count].get('data-src')
+            # Circumvent google automation detectors
+            if "google" in url:
+                continue
             download_img(url, location)
             count += 1
     else:
         for _ in imageArray:
             url = imageArray[count].get('src')
+            # Circumvent google automation detectors
+            if "google" in url:
+                continue
             download_img(url, location)
             count += 1
 
