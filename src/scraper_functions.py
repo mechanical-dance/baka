@@ -3,7 +3,7 @@ import shutil
 
 import bs4
 import requests
-from requests import Response
+from requests import Response, Session
 
 from src.classes.book_class import Book
 
@@ -20,17 +20,17 @@ def download_chapter(book: Book, chapter: int = None, retry: bool = False) -> st
 
     os.makedirs(location, exist_ok=True)
 
-    res: Response = Response()
+    resSession: Session = requests.Session()
 
     try:
-        res = requests.get(f'{url}{chapter}')
+        res = resSession.get(f'{url}{chapter}')
     except ConnectionError:
         print('It seems the info for that manga is outdated. Please open an issue')  # Todo: Link to github
         # TODO Cleanup Directories
         exit(0)
     res.raise_for_status()
     parser = bs4.BeautifulSoup(res.text, 'html.parser')
-    imageArray: [str] = parser.select(div)
+    imageArray = parser.select(div)
     print('This is the image array object: ', imageArray)
 
     if len(imageArray) == 0:
@@ -50,7 +50,7 @@ def download_chapter(book: Book, chapter: int = None, retry: bool = False) -> st
             # Circumvent google automation detectors
             if "google" in url:
                 continue
-            download_img(url, location)
+            download_img(url, location, resSession)
             count += 1
     else:
         for _ in imageArray:
@@ -58,9 +58,10 @@ def download_chapter(book: Book, chapter: int = None, retry: bool = False) -> st
             # Circumvent google automation detectors
             if "google" in url:
                 continue
-            download_img(url, location)
+            download_img(url, location, resSession)
             count += 1
 
+    resSession.close()
     return prepare_cbz(book, location)
 
 
@@ -82,9 +83,9 @@ def data_check(img) -> bool:
     return True if 'data' in url else False
 
 
-def download_img(url: str, location: str):
+def download_img(url: str, location: str, session: Session):
     print(f'\tDownloading {url}')
-    res2 = requests.get(url)
+    res2 = session.get(url)
     res2.raise_for_status()
     pic = open(os.path.join(location, os.path.basename(url)), 'wb')
     for i in res2.iter_content(100000):
