@@ -9,7 +9,7 @@ In chapter mode images are compiled and converted into a single ebook, but more 
 found in collection mode. This mode collects multiple chapters into a single file and separates the individual chapters with a table of contents. 
 In both modes, BAKA cleans up after itself, leaving behind only a ready to read ebook.
  
-Baka is my first personal project, so I plan to update it as I grow as a developer. As of now, it's usable if you know how to run python scripts but eventually there will just be a binary.
+Baka is my first personal project, so I plan to update it as I grow as a developer. As of now, it's usable if you know how to run python scripts but eventually there will be an installable binary(.exe).
 
 ## Usage:
 To use BAKA just clone this repo, navigate to the baka folder, use pip to install the requirements.txt file, and in the src folder either 
