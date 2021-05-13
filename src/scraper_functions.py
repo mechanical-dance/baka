@@ -1,10 +1,12 @@
 import asyncio
 import os
 import shutil
+import lxml
+import cchardet
 
 import aiohttp
 import bs4
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientResponse
 
 from src.classes.book_class import Book
 
@@ -24,13 +26,13 @@ async def download_chapter(book: Book, chapter: int = None, retry: bool = False)
     asyncSession: ClientSession = aiohttp.ClientSession()
 
     try:
-        res = await asyncSession.get(f'{url}{chapter}')
+        res: ClientResponse = await asyncSession.get(f'{url}{chapter}')
     except ConnectionError:
         print('It seems the info for that manga is outdated. Please open an issue')  # Todo: Link to github
         abort_cleanup(book)
         exit(0)
     res.raise_for_status()
-    parser = bs4.BeautifulSoup(await res.text(), 'html.parser')
+    parser = bs4.BeautifulSoup(await res.text(), 'lxml')
     imageArray = parser.select(div)
 
     if len(imageArray) == 0:
