@@ -3,7 +3,7 @@ from src.selections import mangaSelection, bookType
 from src.scraper_functions import *
 
 
-def main():
+async def main():
     print('Welcome to B.A.K.A, the Booking and Kindling Archiver!')
     print('This application allows you to download manga and convert it into a kindle formatted ebook.\n')
 
@@ -17,7 +17,7 @@ def main():
     if book.type == 'chapter':
 
         # Download image files and prepare cbz
-        cbz = download_chapter(book)
+        cbz = await download_chapter(book)
         # Convert to ebook
         convert_cbz(cbz)
         # Clean up
@@ -33,7 +33,7 @@ def main():
             print('Downloading Chapter', count)
 
             cFile.write(f'{count}.cbz: Chapter {count} \n')  # Add chapter to index
-            download_chapter(book, count)  # Download image files and prepare cbz
+            await download_chapter(book, count)  # Download image files and prepare cbz
             book.cleanup(count)  # Clean up chapter files
             count += 1
 
@@ -47,4 +47,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
