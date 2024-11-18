@@ -1,5 +1,5 @@
 # BAKA
-### booking and kindle archiver
+### booking and kindling archiver
 
 BAKA is a simple command line tool that allows users to download manga from the internet and
 converts it into azw3 formatted ebooks for use with kindle devices. It uses
